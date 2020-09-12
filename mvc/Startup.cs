@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,6 +30,9 @@ namespace mvc
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            // Add CookieTempDataProvider after AddMvc and include ViewFeatures.
+            // using Microsoft.AspNetCore.Mvc.ViewFeatures;
+            services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();
             services.AddTransient<IProductRepository, ProductRepository>();
 
             services.AddDbContext<ApplicationDbContext>(options =>

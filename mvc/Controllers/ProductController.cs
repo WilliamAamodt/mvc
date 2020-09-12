@@ -39,12 +39,24 @@ namespace mvc.Controllers
         }
         // Post: Product/Create
         [HttpPost]
-        public ActionResult Create(ProductsEditViewModel product)
+        public ActionResult Create([Bind("ProductId,Name,Description,Price,ManufacturerId,CategoryId")]
+            ProductsEditViewModel product)
         {
+            
             try
             {
-                repository.Save(product);
-                return RedirectToAction("Index");
+                if(ModelState.IsValid)
+                {
+                    repository.Save(product);
+                    TempData["message"] = string.Format("{0} har blitt opprettet", product.Name);
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return View();
+                }
+                
+                
             }
             catch (Exception e)
             {
