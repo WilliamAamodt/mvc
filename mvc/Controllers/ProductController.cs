@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using mvc.Models;
 using mvc.Models.Entites;
+using mvc.Models.ViewModels;
 
 namespace mvc.Controllers
 {
@@ -33,11 +34,12 @@ namespace mvc.Controllers
         // GET: Product/Create
         public ActionResult Create()
         {
-            return View();
+            var product = repository.GetProductEditViewModel();
+            return View(product);
         }
         // Post: Product/Create
         [HttpPost]
-        public ActionResult Create(Product product)
+        public ActionResult Create(ProductsEditViewModel product)
         {
             try
             {

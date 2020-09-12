@@ -1,4 +1,7 @@
-﻿@model IEnumerable<mvc.Models.Entites.Product>
+﻿@using mvc.Models.Entites
+@using System.Linq
+@using Microsoft.CodeAnalysis.CSharp.Syntax
+@model IEnumerable<mvc.Models.Entites.Product>
 
 @{
     ViewData["Title"] = "Index";
@@ -40,7 +43,7 @@
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Category)
+                @Html.DisplayFor(modelItem => item.Category.Name)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
