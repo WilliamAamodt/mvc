@@ -26,13 +26,13 @@ namespace mvc.Data
                     logger.LogInformation("The database was already seeded");
                     return; // DB has been seeded
                 }
-                context.Products.AddRange(
-                    new Product { Name = "Hammer", Price = 121.50m, Category = "Verktøy" },
-                    new Product { Name = "Vinkelsliper", Price = 1520.00m, Category = "Verktøy" },
-                    new Product { Name = "Volvo XC90", Price = 990000m, Category = " Kjøretøy" },
-                    new Product { Name = "Volvo XC60", Price = 620000m, Category = "Kjøretøy" },
-                    new Product { Name = "Brød", Price = 25.50m, Category = "Dagligvarer" }
-                );
+                ////context.Products.AddRange(
+                ////    new Product { Name = "Hammer", Price = 121.50m, Category = "Verktøy" },
+                ////    new Product { Name = "Vinkelsliper", Price = 1520.00m, Category = "Verktøy" },
+                ////    new Product { Name = "Volvo XC90", Price = 990000m, Category = " Kjøretøy" },
+                ////    new Product { Name = "Volvo XC60", Price = 620000m, Category = "Kjøretøy" },
+                ////    new Product { Name = "Brød", Price = 25.50m, Category = "Dagligvarer" }
+                //);
                 context.SaveChanges();
                 logger.LogInformation("Finished seeding the database.");
             }
