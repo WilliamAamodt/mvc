@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "mssql2": {
+      "type": "mssql.local",
+      "connectionId": "ApplicationDbContext"
+    },
+    "mssql1": {
+      "resourceId": null,
+      "type": "mssql.local",
+      "connectionId": "mvcContext",
+      "secretStore": null
+    }
+  }
+}
