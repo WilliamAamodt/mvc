@@ -26,11 +26,6 @@ namespace mvc.Controllers
             return View(repository.GetAll());
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
         // GET: Product/Create
         public ActionResult Create()
         {
@@ -51,7 +46,6 @@ namespace mvc.Controllers
                     TempData["message"] = string.Format("{0} har blitt opprettet", product.Name);
                     return RedirectToAction("Index");
                 }
-                else
                 {
                     return View();
                 }
