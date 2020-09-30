@@ -151,6 +151,7 @@ namespace ProductUnitTest
                 var result = controller.Create(badModel) as ViewResult;
 
                 Assert.IsNotNull(result);
+                //Fikk den ikke til å returnere noe annet en Null, usikker på hvorfor.
                 Assert.AreEqual(null, result.ViewName);
 
             }
@@ -161,6 +162,7 @@ namespace ProductUnitTest
         [TestMethod]
         public void CreateRedirectActionRedirectsToIndexAction()
         {
+            //Kode KC - Tatt fra canvas, Testing ved bruk av Temp data.
             //Arrange            
             var mockRepo = new Mock<IProductRepository>();
             var controller = new ProductController(mockRepo.Object);

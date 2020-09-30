@@ -39,6 +39,8 @@ namespace mvc.Data
                 //    new Manufacturer{Name = "Volvo", Address = "Langstranda 2",Description = "Bilprodusent"},
                 //    new Manufacturer{Name = "Gilde",Address = "Slakterveien 14", Description = "Slakter og matvare produsent"},
                 //    new Manufacturer{Name = "Bosch",Address = "Potsdammer Platz 1", Description = "Tysk verktøy produsent"});
+
+                //Kommentert ut, for å ungå duplikasjoner av Kategori og Manufacturers
                 
                 if (context.Products.Any())
                 {
