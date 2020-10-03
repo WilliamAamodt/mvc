@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using mvc.Models;
@@ -27,12 +28,16 @@ namespace mvc.Controllers
         }
 
         // GET: Product/Create
+        [Authorize]
+        [HttpGet]
         public ActionResult Create()
         {
-            var product = repository.GetProductEditViewModel();
+            var product = repository.
+                GetProductEditViewModel();
             return View(product);
         }
         // Post: Product/Create
+        [Authorize]
         [HttpPost]
         public ActionResult Create([Bind("ProductId,Name,Description,Price,ManufacturerId,CategoryId")]
             ProductsEditViewModel product)

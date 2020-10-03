@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using mvc.Data;
 
 namespace mvc.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201003141329_BlogTables")]
+    partial class BlogTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -232,9 +234,6 @@ namespace mvc.Migrations
                     b.Property<string>("OwnerId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("PostId")
-                        .HasColumnType("int");
-
                     b.HasKey("BlogId");
 
                     b.HasIndex("OwnerId");
@@ -267,15 +266,15 @@ namespace mvc.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("BlogId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Postid")
-                        .HasColumnType("int");
-
                     b.HasKey("CommentId");
 
-                    b.HasIndex("Postid");
+                    b.HasIndex("BlogId");
 
                     b.ToTable("Comments");
                 });
@@ -309,9 +308,6 @@ namespace mvc.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int?>("BlogId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CommentId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
@@ -423,9 +419,9 @@ namespace mvc.Migrations
 
             modelBuilder.Entity("mvc.Models.Entites.Comments", b =>
                 {
-                    b.HasOne("mvc.Models.Entites.Post", null)
+                    b.HasOne("mvc.Models.Entites.Blog", null)
                         .WithMany("Comments")
-                        .HasForeignKey("Postid");
+                        .HasForeignKey("BlogId");
                 });
 
             modelBuilder.Entity("mvc.Models.Entites.Post", b =>

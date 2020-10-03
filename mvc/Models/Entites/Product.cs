@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -19,5 +20,7 @@ namespace mvc.Models.Entites
         public virtual Manufacturer Manufacturer { get; set; }
         public int CategoryId { get; set; }
         public virtual Category Category { get; set; }
+
+        public virtual IdentityUser Owner { get; set; }
     }
 }

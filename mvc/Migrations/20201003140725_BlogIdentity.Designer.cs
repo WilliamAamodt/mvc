@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using mvc.Data;
 
 namespace mvc.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201003140725_BlogIdentity")]
+    partial class BlogIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -219,29 +221,6 @@ namespace mvc.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("mvc.Models.Entites.Blog", b =>
-                {
-                    b.Property<int>("BlogId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OwnerId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("PostId")
-                        .HasColumnType("int");
-
-                    b.HasKey("BlogId");
-
-                    b.HasIndex("OwnerId");
-
-                    b.ToTable("Blog");
-                });
-
             modelBuilder.Entity("mvc.Models.Entites.Category", b =>
                 {
                     b.Property<int>("CategoryId")
@@ -258,26 +237,6 @@ namespace mvc.Migrations
                     b.HasKey("CategoryId");
 
                     b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("mvc.Models.Entites.Comments", b =>
-                {
-                    b.Property<int>("CommentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Postid")
-                        .HasColumnType("int");
-
-                    b.HasKey("CommentId");
-
-                    b.HasIndex("Postid");
-
-                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("mvc.Models.Entites.Manufacturer", b =>
@@ -299,32 +258,6 @@ namespace mvc.Migrations
                     b.HasKey("ManufacturerId");
 
                     b.ToTable("Manufacturers");
-                });
-
-            modelBuilder.Entity("mvc.Models.Entites.Post", b =>
-                {
-                    b.Property<int>("Postid")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("BlogId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CommentId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Postid");
-
-                    b.HasIndex("BlogId");
-
-                    b.ToTable("Post");
                 });
 
             modelBuilder.Entity("mvc.Models.Entites.Product", b =>
@@ -412,27 +345,6 @@ namespace mvc.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("mvc.Models.Entites.Blog", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerId");
-                });
-
-            modelBuilder.Entity("mvc.Models.Entites.Comments", b =>
-                {
-                    b.HasOne("mvc.Models.Entites.Post", null)
-                        .WithMany("Comments")
-                        .HasForeignKey("Postid");
-                });
-
-            modelBuilder.Entity("mvc.Models.Entites.Post", b =>
-                {
-                    b.HasOne("mvc.Models.Entites.Blog", null)
-                        .WithMany("Post")
-                        .HasForeignKey("BlogId");
                 });
 
             modelBuilder.Entity("mvc.Models.Entites.Product", b =>
