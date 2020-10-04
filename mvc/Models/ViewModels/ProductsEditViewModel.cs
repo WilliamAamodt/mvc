@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using mvc.Models.Entites;
 
 namespace mvc.Models.ViewModels
@@ -22,6 +23,8 @@ namespace mvc.Models.ViewModels
         public decimal Price { get; set; }
         public List<Category> Categories { get; set; }
         public List<Manufacturer> Manufacturers { get; set; }
-        
+
+        public virtual IdentityUser Owner { get; set; }
+
     }
 }

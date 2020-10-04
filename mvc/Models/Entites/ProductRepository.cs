@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using mvc.Models.Entites;
 using mvc.Data;
 using mvc.Models.ViewModels;
@@ -15,9 +19,11 @@ namespace mvc.Models.Entites
     public class ProductRepository : IProductRepository
     {
         private ApplicationDbContext db;
-        public ProductRepository(ApplicationDbContext db)
+        private UserManager<IdentityUser> manager;
+        public ProductRepository(UserManager<IdentityUser> userManager , ApplicationDbContext db)
         {
             this.db = db;
+            this.manager = userManager;
         }
         public IEnumerable<Product> GetAll()
         {
@@ -27,7 +33,25 @@ namespace mvc.Models.Entites
 
         public void Save(ProductsEditViewModel product)
         {
+            throw new NotImplementedException();
+        }
+        public Product Get(int? id)
+        {
+            Product p = (from o in db.Products
+                //                            .Include("Category")
+                //                            .Include("Manufacturer")
+                where o.ProductId == id
+                select o).FirstOrDefault();
+            return p;
+        }
+
+        [Authorize]
+        public async Task Save(ProductsEditViewModel product, IPrincipal principal)
+        {
+            var currentUser = await manager.FindByNameAsync(principal.Identity.Name);
+
             var p = db.Products;
+            
             p.AddRange(
                 new Product
                 {
@@ -35,12 +59,19 @@ namespace mvc.Models.Entites
                     Description = product.Description,
                     Price = product.Price,
                     CategoryId = product.CategoryId,
-                    ManufacturerId = product.ManufacturerId
+                    ManufacturerId = product.ManufacturerId,
+                    Owner =  currentUser
+
                 });
             db.SaveChanges();
         }
 
-        public ProductsEditViewModel GetProductEditViewModel(int id)
+        public void Save(Product product)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ProductsEditViewModel GetProductEditViewModel(int? id)
         {
             var p = (from o in db.Products
                     .Include("Category")
@@ -87,6 +118,18 @@ namespace mvc.Models.Entites
         {
             IEnumerable<Category> categories = db.Categories;
             return db.Categories;
+        }
+
+        public async Task Remove(Product p)
+        {
+            db.Products.Remove(p);
+            await db.SaveChangesAsync();
+        }
+
+        public void Update(Product product)
+        {
+            db.Products.Update(product);
+            db.SaveChanges();
         }
     }
 }

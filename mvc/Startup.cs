@@ -15,7 +15,7 @@ using mvc.Models.Entites;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileSystemGlobbing.Internal.Patterns;
 using mvc.Data;
-using mvc.Models.BlogRepo;
+
 
 namespace mvc
 {
@@ -36,9 +36,6 @@ namespace mvc
             // using Microsoft.AspNetCore.Mvc.ViewFeatures;
             services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();
             services.AddTransient<IProductRepository, ProductRepository>();
-            services.AddTransient<IBlogRepository, BlogRepository>();
-            services.AddTransient<IPostRepository, PostRepository>();
-            services.AddTransient<ICommentsRepository, CommentsRepository>();
 
             services.AddRazorPages();
 
@@ -64,11 +61,8 @@ namespace mvc
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
-
             app.UseStaticFiles();
             app.UseAuthentication();
-           
-
             app.UseRouting();
 
             app.UseAuthorization();
@@ -77,7 +71,7 @@ namespace mvc
             {
                 endpoints.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Blog}/{action=Index}/{id?}");
+                pattern: "{controller=Product}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
         }
