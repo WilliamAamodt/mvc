@@ -18,6 +18,8 @@ namespace mvc.Models.BlogRepo
 
         PostViewModel getPostViewModel(int id, int postId);
 
+        BlogViewModel GetBlogVM(int id);
+
         IEnumerable<Post> GetBlogPost(int id);
 
         IEnumerable<Blog> GetBlogs(int id);

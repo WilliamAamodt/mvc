@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.SignalR;
+using mvc.Authorization;
+using mvc.Data;
 using mvc.Models;
 using mvc.Models.BlogRepo;
 using mvc.Models.Entites;
@@ -18,11 +23,18 @@ namespace mvc.Controllers
     {
         
         private IPostRepository postRepository;
-        
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly ApplicationDbContext _db;
+        private readonly IAuthorizationService _authorizationService;
 
-        public PostController(IPostRepository postRepository)
+
+        public PostController(IPostRepository postRepository,
+            ApplicationDbContext db = null, UserManager<IdentityUser> userManager = null, IAuthorizationService authorizationService = null)
         {
             this.postRepository = postRepository;
+            _db = db;
+            _userManager = userManager;
+            _authorizationService = authorizationService;
         }
         // GET: PostController
         //public ActionResult Post()
@@ -31,10 +43,15 @@ namespace mvc.Controllers
         //}
         [Route("Post/Posts/{id}")]
         [HttpGet]
-        public ActionResult Posts(int id)
+        public async Task<ActionResult> Posts(int id)
         {
             ViewBag.ID = id;
-
+            BlogViewModel userBlog = postRepository.GetBlogVM(id);
+            string blogOwner = userBlog.Owner.Id;
+           // var currentUser = await _userManager.FindByNameAsync(iPrincipal.Identity.Name);
+           var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            TempData["CurrentUser"] = userId;
+            TempData["BlogOwner"] = blogOwner;
             return View(postRepository.GetBlogPost(id));
         }
 
@@ -58,10 +75,16 @@ namespace mvc.Controllers
         //// GET: PostController/Create
         
         [HttpGet]
-        public ActionResult Create(int id)
+        public async Task<ActionResult> Create(int id)
         {
             var blog = postRepository.GetBlog(id);
+            BlogViewModel userBlog = postRepository.GetBlogVM(id);
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, userBlog, UserOperations.Create);
 
+            if (!isAuthorized.Succeeded)
+            {
+                return RedirectToAction("Posts", "Post", new { id = blog.BlogId});
+            }
             var model = new PostViewModel
             {
                 BlogId = blog.BlogId

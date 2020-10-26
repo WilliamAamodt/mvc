@@ -1,8 +1,11 @@
 ﻿@using mvc.Controllers
 @using mvc.Models.Entites
 @using Microsoft.AspNetCore.Authorization
+@using mvc.Authorization
 @inject IAuthorizationService AuthorizationService
 @model IEnumerable<mvc.Models.Entites.Post>
+
+
 
 @{
     ViewData["Title"] = "Posts";
@@ -13,11 +16,12 @@
 
 <h1>Posts</h1>
 
-
-<p>
-    <a asp-action="Create" asp-route-id="@id">Create New</a>
-</p>
-
+@if (String.Equals(TempData["BlogOwner"],TempData["CurrentUser"]))
+{
+    <p>
+        <a asp-action="Create" asp-route-id="@id">Create New</a>
+    </p>
+}
 <table class="table">
     <thead>
         <tr>

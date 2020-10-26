@@ -1,0 +1,47 @@
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Threading.Tasks;
+//using Microsoft.AspNetCore.Authorization;
+//using Microsoft.AspNetCore.Authorization.Infrastructure;
+//using Microsoft.AspNetCore.Identity;
+
+//using mvc.Models.Entites;
+//using mvc.Models.ViewModels;
+
+//namespace mvc.Authorization
+//{
+//    public class PostOwnerAuthorizationHandler : AuthorizationHandler<OperationAuthorizationRequirement, PostViewModel>
+//    {
+//        UserManager<IdentityUser> _userManager;
+
+//        public PostOwnerAuthorizationHandler(UserManager<IdentityUser>
+//            userManager)
+//        {
+//            _userManager = userManager;
+//        }
+//        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, OperationAuthorizationRequirement requirement,
+//            PostViewModel resource)
+//        {
+//            if (context.User == null || resource == null)
+//            {
+//                return Task.CompletedTask;
+//            }
+
+//            if (requirement.Name != Constants.CreateOperationName &&
+//                requirement.Name != Constants.ReadOperationName &&
+//                requirement.Name != Constants.UpdateOperationName &&
+//                requirement.Name != Constants.DeleteOperationName)
+//            {
+//                return Task.CompletedTask;
+//            }
+
+//            if (resource. == _userManager.GetUserId(context.User))
+//            {
+//                context.Succeed(requirement);
+//            }
+
+//            return Task.CompletedTask;
+//        }
+//    }
+//}

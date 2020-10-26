@@ -104,7 +104,8 @@ namespace mvc.Controllers
 
             if (!isAuthorized.Succeeded)
             {
-                return new ChallengeResult();
+                TempData["message"] = "Ingen adgang!";
+                return RedirectToAction("Index");
             }
 
             blogRepository.DeleteBlog(id);
@@ -113,11 +114,20 @@ namespace mvc.Controllers
 
         [HttpGet]
         [Authorize]
-        public ActionResult EditBlog(int id)
+        public async Task<ActionResult> EditBlog(int id)
         {
             var blog = blogRepository.Get(id);
 
-            return View(blog);
+            BlogViewModel userBlog = blogRepository.GetBlog(id);
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, userBlog, UserOperations.Update);
+
+            if (!isAuthorized.Succeeded)
+            {
+                TempData["message"] = "Ingen adgang!";
+                return RedirectToAction("Index");
+            }
+
+            return await Task.Run(() => View(blog));
         }
 
         [HttpPost]

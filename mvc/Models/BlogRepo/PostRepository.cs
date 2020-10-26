@@ -176,5 +176,19 @@ namespace mvc.Models.BlogRepo
                 }).FirstOrDefault();
             return p;
         }
+
+        public BlogViewModel GetBlogVM(int id)
+        {
+            var b = (from o in db.Blog
+                where o.BlogId == id
+                select new BlogViewModel()
+                {
+                    BlogId = o.BlogId,
+                    Name = o.Name,
+                    PostId = o.PostId,
+                    Owner = o.Owner,
+                }).FirstOrDefault();
+            return b;
+        }
     }
 }
