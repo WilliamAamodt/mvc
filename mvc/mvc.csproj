@@ -12,6 +12,20 @@
     <Compile Remove="Migrations\20200912010306_Initial config.Designer.cs" />
     <Compile Remove="Migrations\20200912014507_Oblig1 config.cs" />
     <Compile Remove="Migrations\20200912014507_Oblig1 config.Designer.cs" />
+    <Compile Remove="Migrations\20201003134601_CreateIdentity.cs" />
+    <Compile Remove="Migrations\20201003134601_CreateIdentity.Designer.cs" />
+    <Compile Remove="Migrations\20201003140725_BlogIdentity.cs" />
+    <Compile Remove="Migrations\20201003140725_BlogIdentity.Designer.cs" />
+    <Compile Remove="Migrations\20201003141329_BlogTables.cs" />
+    <Compile Remove="Migrations\20201003141329_BlogTables.Designer.cs" />
+    <Compile Remove="Migrations\20201003141812_BlogTablesRett.cs" />
+    <Compile Remove="Migrations\20201003141812_BlogTablesRett.Designer.cs" />
+    <Compile Remove="Migrations\20201003192432_IdendetityBlog.cs" />
+    <Compile Remove="Migrations\20201003192432_IdendetityBlog.Designer.cs" />
+    <Compile Remove="Migrations\20201003192808_IdendetityBlog1.cs" />
+    <Compile Remove="Migrations\20201003192808_IdendetityBlog1.Designer.cs" />
+    <Compile Remove="Migrations\20201003193443_Blog.cs" />
+    <Compile Remove="Migrations\20201003193443_Blog.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

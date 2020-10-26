@@ -10,8 +10,8 @@ using mvc.Data;
 namespace mvc.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201003141329_BlogTables")]
-    partial class BlogTables
+    [Migration("20201004150113_testUser")]
+    partial class testUser
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -234,6 +234,9 @@ namespace mvc.Migrations
                     b.Property<string>("OwnerId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
                     b.HasKey("BlogId");
 
                     b.HasIndex("OwnerId");
@@ -266,15 +269,20 @@ namespace mvc.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("BlogId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PostViewModelPostId")
+                        .HasColumnType("int");
+
                     b.HasKey("CommentId");
 
-                    b.HasIndex("BlogId");
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("PostViewModelPostId");
 
                     b.ToTable("Comments");
                 });
@@ -302,12 +310,15 @@ namespace mvc.Migrations
 
             modelBuilder.Entity("mvc.Models.Entites.Post", b =>
                 {
-                    b.Property<int>("Postid")
+                    b.Property<int>("PostId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("BlogId")
+                    b.Property<int>("BlogId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CommentId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
@@ -316,7 +327,7 @@ namespace mvc.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Postid");
+                    b.HasKey("PostId");
 
                     b.HasIndex("BlogId");
 
@@ -357,6 +368,30 @@ namespace mvc.Migrations
                     b.HasIndex("OwnerId");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("mvc.Models.ViewModels.PostViewModel", b =>
+                {
+                    b.Property<int>("PostId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("BlogId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CommentsId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PostId");
+
+                    b.ToTable("PostViewModel");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -419,16 +454,24 @@ namespace mvc.Migrations
 
             modelBuilder.Entity("mvc.Models.Entites.Comments", b =>
                 {
-                    b.HasOne("mvc.Models.Entites.Blog", null)
+                    b.HasOne("mvc.Models.Entites.Post", null)
                         .WithMany("Comments")
-                        .HasForeignKey("BlogId");
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("mvc.Models.ViewModels.PostViewModel", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("PostViewModelPostId");
                 });
 
             modelBuilder.Entity("mvc.Models.Entites.Post", b =>
                 {
                     b.HasOne("mvc.Models.Entites.Blog", null)
                         .WithMany("Post")
-                        .HasForeignKey("BlogId");
+                        .HasForeignKey("BlogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("mvc.Models.Entites.Product", b =>

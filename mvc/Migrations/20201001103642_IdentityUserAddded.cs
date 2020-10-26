@@ -2,7 +2,7 @@
 
 namespace mvc.Migrations
 {
-    public partial class CreateIdentity : Migration
+    public partial class IdentityUserAddded : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

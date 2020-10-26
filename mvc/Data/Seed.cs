@@ -42,19 +42,19 @@ namespace mvc.Data
 
                 //Kommentert ut, for å ungå duplikasjoner av Kategori og Manufacturers
 
-                if (context.Products.Any())
-                {
-                    logger.LogInformation("The database was already seeded");
-                    return; // DB has been seeded
-                }
-                context.Products.AddRange(
-                    new Product { Name = "Hammer", Price = 121.50m, CategoryId = 6, ManufacturerId = 6 },
-                    new Product { Name = "Vinkelsliper", Price = 1520.00m, CategoryId = 6, ManufacturerId = 6 },
-                    new Product { Name = "Volvo XC90", Price = 990000m, CategoryId = 4, ManufacturerId = 4 },
-                    new Product { Name = "Volvo XC60", Price = 620000m, CategoryId = 4, ManufacturerId = 4 },
-                    new Product { Name = "Brød", Price = 25.50m, CategoryId = 5, ManufacturerId = 5 }
+                //if (context.Products.Any())
+                //{
+                //    logger.LogInformation("The database was already seeded");
+                //    return; // DB has been seeded
+                //}
+                //context.Products.AddRange(
+                //    new Product { Name = "Hammer", Price = 121.50m, CategoryId = 6, ManufacturerId = 6 },
+                //    new Product { Name = "Vinkelsliper", Price = 1520.00m, CategoryId = 6, ManufacturerId = 6 },
+                //    new Product { Name = "Volvo XC90", Price = 990000m, CategoryId = 4, ManufacturerId = 4 },
+                //    new Product { Name = "Volvo XC60", Price = 620000m, CategoryId = 4, ManufacturerId = 4 },
+                //    new Product { Name = "Brød", Price = 25.50m, CategoryId = 5, ManufacturerId = 5 }
 
-                );
+                //);
                
                 logger.LogInformation("Finished seeding the database.");
 

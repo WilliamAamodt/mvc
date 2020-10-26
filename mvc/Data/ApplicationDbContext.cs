@@ -14,7 +14,7 @@ namespace mvc.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {}
-        public DbSet<Product> Products { get; set; }
+       
 
         public DbSet<Category> Categories { get; set; }
 
@@ -26,6 +26,7 @@ namespace mvc.Data
 
         public DbSet<Comments> Comments { get; set; }
 
-        public DbSet<mvc.Models.ViewModels.BlogViewModel> BlogViewModel { get; set; }
+        public DbSet<mvc.Models.ViewModels.PostViewModel> PostViewModel { get; set; }
+
     }
 }

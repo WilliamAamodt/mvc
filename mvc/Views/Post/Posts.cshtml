@@ -1,0 +1,49 @@
+﻿@using mvc.Controllers
+@using mvc.Models.Entites
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@model IEnumerable<mvc.Models.Entites.Post>
+
+@{
+    ViewData["Title"] = "Posts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var id = ViewBag.ID;
+}
+<br />
+
+<h1>Posts</h1>
+
+
+<p>
+    <a asp-action="Create" asp-route-id="@id">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a asp-controller="Post" asp-action="Post" asp-route-id="@item.BlogId" asp-route-postId="@item.PostId">@Html.DisplayFor(modelItem => item.Name)</a>
+                    <input type="hidden" name="PostId" value="@item.PostId" />
+                    <input type="hidden" name="PostId" value="@item.BlogId" />
+                    <a></a>
+                </td>
+
+                <td>
+                    <a asp-action="EditPost" asp-route-id="@item.PostId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.PostId">Details</a> |
+                    <a asp-action="DeletePost" asp-route-postId="@item.PostId" asp-route-blogId="@item.BlogId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

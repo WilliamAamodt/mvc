@@ -2,7 +2,7 @@
 
 namespace mvc.Migrations
 {
-    public partial class BlogIdentity : Migration
+    public partial class Please2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

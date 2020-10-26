@@ -2,10 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +17,9 @@ using mvc.Models;
 using mvc.Models.Entites;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileSystemGlobbing.Internal.Patterns;
+using mvc.Authorization;
 using mvc.Data;
+using mvc.Models.BlogRepo;
 
 
 namespace mvc
@@ -35,15 +40,30 @@ namespace mvc
             // Add CookieTempDataProvider after AddMvc and include ViewFeatures.
             // using Microsoft.AspNetCore.Mvc.ViewFeatures;
             services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();
-            services.AddTransient<IProductRepository, ProductRepository>();
+            
+            services.AddTransient<IBlogRepository, BlogRepository>();
+            services.AddTransient<IPostRepository, PostRepository>();
 
             services.AddRazorPages();
 
             services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDefaultIdentity<IdentityUser>().AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddMvc(config =>
+                {
+                    // using Microsoft.AspNetCore.Mvc.Authorization;
+                    // using Microsoft.AspNetCore.Authorization;
+                    var policy = new AuthorizationPolicyBuilder()
+                        .RequireAuthenticatedUser()
+                        .Build();
+                    config.Filters.Add(new AuthorizeFilter(policy));
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
+            services.AddScoped<IAuthorizationHandler,
+                UserIsOwnerAuthorizationHandler>();
 
         }
 
@@ -71,7 +91,7 @@ namespace mvc
             {
                 endpoints.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Product}/{action=Index}/{id?}");
+                pattern: "{controller=Blog}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
         }

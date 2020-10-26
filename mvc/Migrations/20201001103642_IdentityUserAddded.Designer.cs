@@ -10,8 +10,8 @@ using mvc.Data;
 namespace mvc.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201003134601_CreateIdentity")]
-    partial class CreateIdentity
+    [Migration("20201001103642_IdentityUserAddded")]
+    partial class IdentityUserAddded
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

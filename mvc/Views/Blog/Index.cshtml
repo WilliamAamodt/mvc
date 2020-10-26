@@ -1,4 +1,6 @@
-﻿@model IEnumerable<mvc.Models.Entites.Blog>
+﻿@using mvc.Models.BlogRepo
+@using System.Security.Principal
+@model IEnumerable<mvc.Models.Entites.Blog>
 
 @{
     ViewData["Title"] = "Blog liste";
@@ -29,13 +31,12 @@
                     @Html.DisplayFor(modelItem => item.BlogId)
                 </td>
                 <td>
-                    
                     <a asp-action="BlogView" asp-route-id="@item.BlogId">@Html.DisplayFor(modelItem => item.Name)</a>
+                    <input type="hidden" name="BlogId" value="@item.BlogId"/>
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.BlogId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.BlogId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.BlogId">Delete</a>
+                    <a asp-action="EditBlog" asp-route-id="@item.BlogId">Edit</a> |
+                    <a asp-action="DeleteBlog" asp-route-id="@item.BlogId">Delete</a>
                 </td>
             </tr>
 

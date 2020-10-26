@@ -14,11 +14,27 @@ namespace mvc.Models.BlogRepo
 
         void Save(PostViewModel post);
 
-        PostViewModel getPrstViewModel(int id);
+        PostViewModel getPostViewModel(int id);
+
+        PostViewModel getPostViewModel(int id, int postId);
+
+        IEnumerable<Post> GetBlogPost(int id);
+
+        IEnumerable<Blog> GetBlogs(int id);
+
+        Blog GetBlog(int id);
 
         void Delete(PostViewModel post);
 
         void Edit(PostViewModel post);
 
+        void EditPost(Post post);
+
+        Post Get(int id);
+
+        void SaveComment(Comments comments);
+
+        void DeleteComment(int idComment, int id);
+        void DeletePost( int postId, int blogId);
     }
 }

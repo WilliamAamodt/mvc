@@ -1,0 +1,38 @@
+﻿@using mvc.Models.Entites
+@model mvc.Models.ViewModels.PostViewModel
+
+@{
+    ViewData["Title"] = "Post";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+     List<Comments> list = Model.Comments;
+}
+
+<h1>Post</h1>
+
+<div>
+    <h4>PostViewModel</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Content)
+        </dt>
+        <dd class="col-sm-200">
+            @Html.DisplayFor(model => model.Content)
+        </dd>
+    </dl>
+</div>
+
+<div>
+    @await Html.PartialAsync("CommentSection", Model)
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.PostId">Edit</a> |
+    <a asp-action="Posts" asp-route-id="@Model.BlogId">Back to List</a>
+</div>
