@@ -1,29 +1,86 @@
 ﻿@model mvc.Models.ViewModels.PostViewModel
+@using mvc.Models.Entites
 
 <p>
     <a asp-action="CreateComment" asp-route-postId="@Model.PostId">Add a comment!</a>
 </p>
+@*<th>
+        <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#myModal"> open modal</a>
+        <div class="modal fade" id="myModal">
+
+            <div class="modal-dialog">
+
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h3 class="modal-title">Technotips mvc</h3>
+                        <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    </div>
+                    <div class="modal-body">
+                        @Html.ActionLink(Model.Content,
+                            "CreateComment",
+                            "Comment",
+                            new{Model.PostId},
+                            null
+                            );
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                        <a href="#" class="btn btn-success">Submit</a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </th>*@
+
+<a href="#" class="btn btn-danger" onclick="CreateComment(@Model.PostId)"></a>
 <table class="table">
     <thead>
         <tr>
             <th>
+
                 @Html.DisplayNameFor(model => model.Content)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Comments) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Content)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CommentId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CommentId">Details</a> |
-                <a asp-action="DeleteComment" asp-route-id="@item.PostId" asp-route-idComment="@item.CommentId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Comments)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.CommentId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.CommentId">Details</a> |
+                    <a asp-action="DeleteComment" asp-route-id="@item.PostId" asp-route-idComment="@item.CommentId">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
+
 </table>
+<script>
+    //https://www.youtube.com/watch?v=HuniMNaWP6U&ab_channel=Technotips-Ashish
+    var CreateComment = function (postId) {
+
+        $.ajax({
+            type: "GET",
+            url: "/Comment/CreateComment",
+            data: { PostId: postId },
+            success: function (response) {
+
+                $("#myModalBody").html(response);
+
+                $("#myModal").modal("show");
+
+            }
+
+        });
+    }
+</script>
+
+

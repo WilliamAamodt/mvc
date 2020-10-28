@@ -49,7 +49,7 @@ namespace mvc.Models.BlogRepo
 
         public IEnumerable<Blog> GetAll()
         {
-            IEnumerable<Blog> blogs = db.Blog;
+            IEnumerable<Blog> blogs = db.Blog.Include(o => o.Owner);
             return blogs;
         }
 

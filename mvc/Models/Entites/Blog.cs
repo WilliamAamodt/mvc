@@ -13,6 +13,7 @@ namespace mvc.Models.Entites
         public string Name { get; set; }
 
         public int PostId { get; set; }
+
         public virtual ICollection<Post> Post { get; set; }
 
         public virtual IdentityUser Owner { get; set; }

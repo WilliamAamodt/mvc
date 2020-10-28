@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace mvc.Models.BlogRepo
 {
-    interface ICommentsRepository
+    public interface ICommentsRepository
     {
 
         IEnumerable<Comments> getAll();
@@ -15,7 +15,9 @@ namespace mvc.Models.BlogRepo
 
         Comments GetComment(int id);
 
-        Comments GetComments();
+        IEnumerable<Comments> GetCommentsByPost(int id);
+
+        void SaveComment(Comments comments);
 
         void Delete(Comments comment);
 

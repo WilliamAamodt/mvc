@@ -43,6 +43,7 @@ namespace mvc
             
             services.AddTransient<IBlogRepository, BlogRepository>();
             services.AddTransient<IPostRepository, PostRepository>();
+            services.AddTransient<ICommentsRepository, CommentsRepository>();
 
             services.AddRazorPages();
 

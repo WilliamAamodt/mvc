@@ -4,11 +4,13 @@
 @{
     ViewData["Title"] = "Post";
     Layout = "~/Views/Shared/_Layout.cshtml";
-     List<Comments> list = Model.Comments;
+    List<Comments> list = Model.Comments;
 }
 
 <h1>Post</h1>
-
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
 <div>
     <h4>PostViewModel</h4>
     <hr />
@@ -35,4 +37,8 @@
 <div>
     <a asp-action="Edit" asp-route-id="@Model.PostId">Edit</a> |
     <a asp-action="Posts" asp-route-id="@Model.BlogId">Back to List</a>
+</div>
+
+<div>
+    @await Html.PartialAsync("Comments", Model.Comments)
 </div>

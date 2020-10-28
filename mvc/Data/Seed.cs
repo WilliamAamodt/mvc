@@ -64,11 +64,11 @@ namespace mvc.Data
                     return; // DB has been seeded
                 }
 
-                context.Blog.AddRange(
-                    new Blog { Name = "RosaBloggen" },
-                    new Blog { Name = "Williams blog" }
+                //context.Blog.AddRange(
+                //    new Blog { Name = "RosaBloggen" },
+                //    new Blog { Name = "Williams blog" }
                     
-                    );
+                //    );
                 context.SaveChanges();
             }
         }
