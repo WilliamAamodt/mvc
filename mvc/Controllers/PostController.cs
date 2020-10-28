@@ -66,6 +66,17 @@ namespace mvc.Controllers
 
         }
 
+        //[Route("Post/Post/{PostId}")]
+        [HttpGet]
+        public ActionResult Post(int id)
+        {
+            
+            PostViewModel p = postRepository.getPostViewModel(id);
+
+            return View(p);
+
+        }
+
         //// GET: PostController/Details/5
         //public ActionResult Details(int id)
         //{
@@ -73,7 +84,7 @@ namespace mvc.Controllers
         //}
 
         //// GET: PostController/Create
-        
+
         [HttpGet]
         public async Task<ActionResult> Create(int id)
         {

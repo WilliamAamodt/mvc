@@ -59,7 +59,7 @@ namespace mvc.Controllers
 
         // POST: CommentController/Create
         [HttpPost]
-        public ActionResult CreateComment([Bind("Content,PostId")] Comments comment)
+        public void CreateComment([Bind("Content,PostId")] Comments comment)
         {
             if (ModelState.IsValid)
             {
@@ -68,10 +68,10 @@ namespace mvc.Controllers
                 p.CommentId = comment.CommentId;
                 p.Content = comment.Content;
                 commentsRepository.SaveComment(p);
-                return RedirectToAction("Post", "Post", new { id = p.PostId });
+                //return RedirectToAction("Post", "Post", new { id = p.PostId });
             }
 
-            return View(comment);
+            //return View(comment);
         }
 
         // GET: CommentController/Edit/5

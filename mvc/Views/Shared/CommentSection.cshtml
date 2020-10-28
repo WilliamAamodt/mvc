@@ -83,4 +83,29 @@
     }
 </script>
 
+<script>
+
+    $(document).ready(function() {
+
+        $("#btnSubmit").click(function (e) {
+            var myformdata = $("#commentForm").serialize();
+
+            $.ajax({
+                type: "POST",
+                url: "/Comment/CreateComment",
+                data: myformdata,
+                success: function() {
+
+                    $("#myModal").modal("hide");
+                    $("#commentSection").update();
+
+                }
+
+            });
+
+        });
+        });
+
+</script>
+
 

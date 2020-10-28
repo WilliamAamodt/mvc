@@ -75,7 +75,7 @@ namespace mvc.Models.BlogRepo
         public PostViewModel getPostViewModel(int id)
         {
             var p = (from o in db.Post
-                where o.BlogId == id
+                where o.PostId == id
                 select new PostViewModel()
                 {
                     PostId = o.PostId,
@@ -83,7 +83,7 @@ namespace mvc.Models.BlogRepo
                     Name = o.Name,
                     Content = o.Content,
                 }).FirstOrDefault();
-            p.Comments = GetAllCommentsToPost(p.PostId).ToList();
+            p.Comments = GetAllCommentsToPost(id).ToList();
 
             return p;
         }
