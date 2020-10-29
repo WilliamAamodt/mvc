@@ -10,8 +10,8 @@ using mvc.Data;
 namespace mvc.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201027174756_AddedUserToComments")]
-    partial class AddedUserToComments
+    [Migration("20201028214506_UserAddedtoBlog")]
+    partial class UserAddedtoBlog
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -237,9 +237,14 @@ namespace mvc.Migrations
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("BlogId");
 
                     b.HasIndex("OwnerId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Blog");
                 });
@@ -336,6 +341,33 @@ namespace mvc.Migrations
                     b.ToTable("Post");
                 });
 
+            modelBuilder.Entity("mvc.Models.Entites.User", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OwnerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("mvc.Models.ViewModels.PostViewModel", b =>
                 {
                     b.Property<int>("PostId")
@@ -413,6 +445,10 @@ namespace mvc.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId");
+
+                    b.HasOne("mvc.Models.Entites.User", null)
+                        .WithMany("FavoriteBlogs")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("mvc.Models.Entites.Comments", b =>
@@ -439,6 +475,13 @@ namespace mvc.Migrations
                         .HasForeignKey("BlogId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("mvc.Models.Entites.User", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId");
                 });
 #pragma warning restore 612, 618
         }

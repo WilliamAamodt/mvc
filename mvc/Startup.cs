@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -17,6 +19,7 @@ using mvc.Models;
 using mvc.Models.Entites;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileSystemGlobbing.Internal.Patterns;
+using Microsoft.IdentityModel.Tokens;
 using mvc.Authorization;
 using mvc.Data;
 using mvc.Models.BlogRepo;
@@ -44,7 +47,7 @@ namespace mvc
             services.AddTransient<IBlogRepository, BlogRepository>();
             services.AddTransient<IPostRepository, PostRepository>();
             services.AddTransient<ICommentsRepository, CommentsRepository>();
-
+            services.AddTransient<IAccountsRepository, AccountsRepository>();
             services.AddRazorPages();
 
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -52,6 +55,30 @@ namespace mvc
 
             services.AddDefaultIdentity<IdentityUser>().AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            var confKey = Configuration.GetSection("TokenSettings")["SecretKey"];
+            var key = Encoding.ASCII.GetBytes(confKey);
+            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication()
+                // Enable Cookie authentication
+                .AddCookie(cfg => cfg.SlidingExpiration = true)
+                //Enables jwt bearer tokens
+                .AddJwtBearer(x =>
+                {
+                    x.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+
+                        //NameClaimType = ClaimTypes.NameIdentifier,
+                        //RoleClaimType = ClaimTypes.Role,
+                        ValidateLifetime = true
+                    };
+
+                });
+
             services.AddMvc(config =>
                 {
                     // using Microsoft.AspNetCore.Mvc.Authorization;

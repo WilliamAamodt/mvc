@@ -1,32 +1,27 @@
 ﻿using System;
+
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace mvc.Models.Entites
 {
     public class User
     {
-        public int UserId { get; set; }
+        [Key]
+        public string Id { get; set; }
+        public virtual IdentityUser Owner { get; set; }
         // user ID from AspNetUser table.
-        public string OwnerID { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public virtual IEnumerable<Blog> FavoriteBlogs { get; set; }
 
-        public string Name { get; set; }
-        public string Address { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
-        public string Zip { get; set; }
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
-        public ContactStatus Status { get; set; }
+        public string Role { get; set; }
     }
 
-    public enum ContactStatus
-    {
-        Submitted,
-        Approved,
-        Rejected
-    }
 }

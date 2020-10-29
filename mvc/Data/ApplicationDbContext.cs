@@ -26,6 +26,8 @@ namespace mvc.Data
 
         public DbSet<Comments> Comments { get; set; }
 
+        public DbSet<User> Users { get; set; }
+
         public DbSet<mvc.Models.ViewModels.PostViewModel> PostViewModel { get; set; }
 
     }

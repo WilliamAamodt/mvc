@@ -4,39 +4,9 @@
 <p>
     <a asp-action="CreateComment" asp-route-postId="@Model.PostId">Add a comment!</a>
 </p>
-@*<th>
-        <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#myModal"> open modal</a>
-        <div class="modal fade" id="myModal">
-
-            <div class="modal-dialog">
-
-                <div class="modal-content">
-
-                    <div class="modal-header">
-                        <h3 class="modal-title">Technotips mvc</h3>
-                        <a href="#" class="close" data-dismiss="modal">&times;</a>
-                    </div>
-                    <div class="modal-body">
-                        @Html.ActionLink(Model.Content,
-                            "CreateComment",
-                            "Comment",
-                            new{Model.PostId},
-                            null
-                            );
-                    </div>
-                    <div class="modal-footer">
-                        <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
-                        <a href="#" class="btn btn-success">Submit</a>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-    </th>*@
 
 <a href="#" class="btn btn-danger" onclick="CreateComment(@Model.PostId)"></a>
-<table class="table">
+<table class="table" id="commentTable">
     <thead>
         <tr>
             <th>
@@ -63,6 +33,130 @@
     </tbody>
 
 </table>
+
+<p>Eksempelet benytter både cookie og jwt basert autorisasjon</p>
+<div style="margin: 50px auto; width:600px;">
+    <div id="btLoginContainer">
+        <input type="text" name="username" id="username" placeholder="Username" />
+        <input type="password" name="password" id="password" placeholder="Password" />
+        <button id="btLogin">Login</button><br>
+        <label>Must have a valid username and password</label>
+    </div>
+    <div id="btLogoutContainer">
+        <button id="btLogout">Logout</button>
+    </div>
+    <div>
+        <label>Action that requires the user to be authenticated: </label><button id="btGetUserDetails">Get User Details</button>
+    </div>
+    <div>
+        <p>Cookie authentication: <a href="product/create">Product Create</a></p>
+        <p>Logout: <a href="identity/account/manage"> Logout</a></p>
+    </div>
+
+</div>
+<div style="margin: 50px; background: lightgray" id="responseContainer">
+
+</div>
+
+<script>
+    function handleError(xhr, textStatus, errorThrown) {
+        if (xhr.status == 401)
+            $('#responseContainer').html("Unauthorized request");
+        else {
+            var message = "<p>Status code: " + xhr.status + "</p>";
+            message += "<pre>" + xhr.responseText + "</pre>";
+            $('#responseContainer').html(message);
+        }
+    }
+
+    function isUserLoggedIn() {
+        return localStorage.getItem("token") !== null;
+    }
+
+    function getSavedToken() {
+        return localStorage.getItem("token");
+    }
+
+
+    $.ajax({
+        method: "POST",
+        url: "some.php",
+        data: { name: "John", location: "Boston" }
+    })
+        .done(function (msg) {
+            alert("Data Saved: " + msg);
+        });
+
+
+    $(function () {
+        $('#btLogin2').click(function () {
+            $.ajax({
+                url: "/api/myaccounts/verifyLogin",
+                type: "POST",
+                data: JSON.stringify({ username: $('#username').val(), password: $('#password').val() }),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8"
+            })
+                .done(function (token) {
+                    localStorage.setItem("token", JSON.stringify(token));
+                    $('#btLoginContainer').hide();
+                    $('#btLogoutContainer').show();
+                    var message = "<p>Token received and saved in local storage under the key 'token'</p>";
+                    message += "<p>Token Value: </p><p style='word-wrap:break-word'>" + JSON.stringify(token) + "</p>";
+                    $('#responseContainer').html(message);
+                })
+                .fail(handleError());
+        });
+
+        $('#btLogin').click(function () {
+            $.post("/api/myaccounts/verifyLogin", $.param({ username: $('#username').val(), password: $('#password').val() }))
+                .done(function (token) {
+                    localStorage.setItem("token", token);
+                    $('#btLoginContainer').hide();
+                    $('#btLogoutContainer').show();
+                    var message = "<p>Token received and saved in local storage under the key 'token'</p>";
+                    message += "<p>Token Value: </p><p style='word-wrap:break-word'>" + token + "</p>";
+                    $('#responseContainer').html(message);
+                }).fail(handleError);
+        });
+
+        $('#btLogout').click(function () {
+            localStorage.removeItem("token");
+            $('#btLogoutContainer').hide();
+            $('#btLoginContainer').show();
+            $('#responseContainer').html("<p>Token deleted from local storage</p>");
+        });
+
+
+        $('#btGetUserDetails').click(function () {
+            $.ajax({
+                beforeSend: function (xhr) {
+                    if (isUserLoggedIn()) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + getSavedToken());
+                    }
+                },
+                url: "/home/GetUserDetails",
+                type: "GET",
+                data: JSON.stringify({ username: $('#username').val(), passwd: $('#password').val() }),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8"
+            })
+                .done(function (userDetails) {
+                    $('#responseContainer').html("<pre>" + JSON.stringify(userDetails) + "</pre>");
+                }).fail(handleError);
+        });
+
+        if (isUserLoggedIn()) {
+            $('#btLoginContainer').hide();
+            $('#btLogoutContainer').show();
+            $('#commentTable').show();
+        } else {
+            $('#btLoginContainer').show();
+            $('#btLogoutContainer').hide();
+            $('#commentTable').hide();
+        }
+    });
+</script>
 <script>
     //https://www.youtube.com/watch?v=HuniMNaWP6U&ab_channel=Technotips-Ashish
     var CreateComment = function (postId) {
@@ -85,7 +179,7 @@
 
 <script>
 
-    $(document).ready(function() {
+    $(document).ready(function () {
 
         $("#btnSubmit").click(function (e) {
             var myformdata = $("#commentForm").serialize();
@@ -94,7 +188,7 @@
                 type: "POST",
                 url: "/Comment/CreateComment",
                 data: myformdata,
-                success: function() {
+                success: function () {
 
                     $("#myModal").modal("hide");
                     $("#commentSection").update();
@@ -104,7 +198,7 @@
             });
 
         });
-        });
+    });
 
 </script>
 

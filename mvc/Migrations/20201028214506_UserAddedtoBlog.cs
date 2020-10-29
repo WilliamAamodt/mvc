@@ -2,25 +2,25 @@
 
 namespace mvc.Migrations
 {
-    public partial class AddedUserToComments : Migration
+    public partial class UserAddedtoBlog : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "OwnerId",
-                table: "Comments",
+                name: "UserId",
+                table: "Blog",
                 nullable: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_OwnerId",
-                table: "Comments",
-                column: "OwnerId");
+                name: "IX_Blog_UserId",
+                table: "Blog",
+                column: "UserId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Comments_AspNetUsers_OwnerId",
-                table: "Comments",
-                column: "OwnerId",
-                principalTable: "AspNetUsers",
+                name: "FK_Blog_Users_UserId",
+                table: "Blog",
+                column: "UserId",
+                principalTable: "Users",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
         }
@@ -28,16 +28,16 @@ namespace mvc.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Comments_AspNetUsers_OwnerId",
-                table: "Comments");
+                name: "FK_Blog_Users_UserId",
+                table: "Blog");
 
             migrationBuilder.DropIndex(
-                name: "IX_Comments_OwnerId",
-                table: "Comments");
+                name: "IX_Blog_UserId",
+                table: "Blog");
 
             migrationBuilder.DropColumn(
-                name: "OwnerId",
-                table: "Comments");
+                name: "UserId",
+                table: "Blog");
         }
     }
 }
