@@ -56,8 +56,6 @@ namespace mvc
             services.AddDefaultIdentity<IdentityUser>().AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            var confKey = Configuration.GetSection("TokenSettings")["SecretKey"];
-            var key = Encoding.ASCII.GetBytes(confKey);
             //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             services.AddAuthentication()
                 // Enable Cookie authentication
@@ -68,7 +66,7 @@ namespace mvc
                     x.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("the secret key that needs to be atleast 16 characters long")),
                         ValidateIssuer = false,
                         ValidateAudience = false,
 

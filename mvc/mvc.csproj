@@ -38,6 +38,8 @@
     <Compile Remove="Migrations\20201028213903_UserAdded.Designer.cs" />
     <Compile Remove="Migrations\20201028214131_UserAdded.cs" />
     <Compile Remove="Migrations\20201028214131_UserAdded.Designer.cs" />
+    <Compile Remove="Migrations\20201029013209_test.cs" />
+    <Compile Remove="Migrations\20201029013209_test.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

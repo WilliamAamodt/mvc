@@ -8,13 +8,13 @@ using Microsoft.AspNetCore.Identity;
 
 namespace mvc.Models.Entites
 {
-    public class User
+    //TODO: Make this class inherit IdentityUser. Remove overlapsing fields, right now the class itself is redundant. https://stackoverflow.com/questions/43810032/add-column-to-aspnetusers-table
+
+    public class User : IdentityUser
     {
         [Key]
         public string Id { get; set; }
-        public virtual IdentityUser Owner { get; set; }
-        // user ID from AspNetUser table.
-        public string Username { get; set; }
+        public string UserName { get; set; }
         public string Password { get; set; }
         public virtual IEnumerable<Blog> FavoriteBlogs { get; set; }
 

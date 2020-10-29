@@ -33,29 +33,30 @@
     </tbody>
 
 </table>
+<div type="hidden" id="debugCheck">
+    <p>Eksempelet benytter både cookie og jwt basert autorisasjon</p>
+    <div style="margin: 50px auto; width:600px;">
+        <div id="btLoginContainer">
+            <input type="text" name="username" id="username" placeholder="Username" />
+            <input type="password" name="password" id="password" placeholder="Password" />
+            <button id="btLogin">Login</button><br>
+            <label>Must have a valid username and password</label>
+        </div>
+        <div id="btLogoutContainer">
+            <button id="btLogout">Logout</button>
+        </div>
+        <div>
+            <label>Action that requires the user to be authenticated: </label><button id="btGetUserDetails">Get User Details</button>
+        </div>
+        <div>
+            <p>Cookie authentication: <a href="product/create">Product Create</a></p>
+            <p>Logout: <a href="identity/account/manage"> Logout</a></p>
+        </div>
 
-<p>Eksempelet benytter både cookie og jwt basert autorisasjon</p>
-<div style="margin: 50px auto; width:600px;">
-    <div id="btLoginContainer">
-        <input type="text" name="username" id="username" placeholder="Username" />
-        <input type="password" name="password" id="password" placeholder="Password" />
-        <button id="btLogin">Login</button><br>
-        <label>Must have a valid username and password</label>
     </div>
-    <div id="btLogoutContainer">
-        <button id="btLogout">Logout</button>
-    </div>
-    <div>
-        <label>Action that requires the user to be authenticated: </label><button id="btGetUserDetails">Get User Details</button>
-    </div>
-    <div>
-        <p>Cookie authentication: <a href="product/create">Product Create</a></p>
-        <p>Logout: <a href="identity/account/manage"> Logout</a></p>
-    </div>
+    <div style="margin: 50px; background: lightgray" id="responseContainer">
 
-</div>
-<div style="margin: 50px; background: lightgray" id="responseContainer">
-
+    </div>
 </div>
 
 <script>
@@ -150,10 +151,12 @@
             $('#btLoginContainer').hide();
             $('#btLogoutContainer').show();
             $('#commentTable').show();
+            //$('#debugCheck').hide();
         } else {
             $('#btLoginContainer').show();
             $('#btLogoutContainer').hide();
             $('#commentTable').hide();
+            $('#debugCheck').show();
         }
     });
 </script>

@@ -36,23 +36,23 @@ namespace mvc.Models.BlogRepo
         /// <returns>User object with a jwt bearer token</returns>
         public async Task<User> VerifyCredentials(User user)
         {
-            if (user.Username == null || user.Password == null || user.Username.Length == 0 || user.Password.Length == 0)
+            if (user.UserName == null || user.Password == null || user.UserName.Length == 0 || user.Password.Length == 0)
             {
                 return null;
             }
 
-            var thisUser = await _userManager.FindByNameAsync(user.Username);
+            var thisUser = await _userManager.FindByNameAsync(user.UserName);
             if (thisUser == null)
                 return (null);
 
-            var result = await _signInManager.PasswordSignInAsync(user.Username, user.Password, false, lockoutOnFailure: true);
+            var result = await _signInManager.PasswordSignInAsync(user.UserName, user.Password, false, lockoutOnFailure: true);
             if (!result.Succeeded)
             {
                 return null;
             }
 
             var role = await _userManager.GetRolesAsync(thisUser);
-            return new User() { Id = thisUser.Id, Username = user.Username, Role = role.FirstOrDefault() };
+            return new User() { Id = thisUser.Id, UserName = user.UserName, Role = role.FirstOrDefault() };
         }
 
         /// <summary>
@@ -64,15 +64,22 @@ namespace mvc.Models.BlogRepo
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var confKey = _conf.GetSection("TokenSettings")["SecretKey"];
-            var key = Encoding.ASCII.GetBytes(confKey);
+            var key = Encoding.UTF8.GetBytes("the secret that needs to be at least 16 characeters long for HmacSha256");
+            //var cIdentity = new ClaimsIdentity(new Claim[]
+            //    {
+            //        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            //        new Claim(ClaimTypes.NameIdentifier, user.Id),
+            //        new Claim(ClaimTypes.Name, user.Username),
+            //        new Claim(ClaimTypes.Role, user.Role)
+            //        //new Claim("roles", user.Role)
+            //    });
             var cIdentity = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(ClaimTypes.NameIdentifier, user.Id),
-                    new Claim(ClaimTypes.Name, user.Username),
-                    new Claim(ClaimTypes.Role, user.Role)
-                    //new Claim("roles", user.Role)
-                });
+            {
+
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Name, user.UserName), 
+                
+            });
 
             //claims.AddRange(roles.Select(role => new Claim(ClaimsIdentity.DefaultRoleClaimType, role)));
 
