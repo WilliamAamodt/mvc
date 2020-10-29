@@ -205,4 +205,32 @@
 
 </script>
 
+<script>
+function get(id) {
+
+//contact = { "Name": "Petter Smart", "Address": "Narvik", "Mobile": "999999", "Email": "test1@gmail.com" };
+$.ajax(
+{
+type: "GET",
+url: "/api/Product/" + id,
+data: {},
+contentType: "application/json;charset=utf-8",
+dataType: 'json',
+success: function (result) {
+$("#update").html("<p>Produkt navn:" + result.name + "Beskrivelse:" + result.description + "</p>");
+},
+error: function (req, status, error) {
+$("#update").html("AJAX error");
+}
+    });
+
+$(document).ready(function () {
+
+    $("#products").html("<p>Venter på data fra server" + "</p>");
+    $("#update").html("<p>Venter på POST..." + "</p>");
+    get(@Model.PostId);
+});
+
+}</script>
+
 

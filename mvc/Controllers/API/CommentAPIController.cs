@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using mvc.Data;
 using mvc.Models.BlogRepo;
+using mvc.Models.Entites;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,14 +19,18 @@ namespace mvc.Controllers.API
     public class CommentAPIController : ControllerBase
     {
 
-        private ICommentsRepository repository;
+        private ICommentsRepository commentsRepository;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly ApplicationDbContext _db;
+        private readonly IAuthorizationService _authorizationService;
 
-        private readonly UserManager<IdentityUser> manager;
-
-        public CommentAPIController(ICommentsRepository repository, UserManager<IdentityUser> userManager)
+        public CommentAPIController(ICommentsRepository repository, UserManager<IdentityUser> userManager,
+        ApplicationDbContext db = null, IAuthorizationService authorizationService = null)
         {
-            this.repository = repository;
-            this.manager = userManager;
+            this._db = db;
+            this._userManager = userManager;
+            _authorizationService = authorizationService;
+            this.commentsRepository = repository;
         }
         // GET: api/<CommentAPIController>
         [HttpGet]
@@ -31,17 +39,64 @@ namespace mvc.Controllers.API
             return new string[] { "value1", "value2" };
         }
 
-        // GET api/<CommentAPIController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get([FromRoute] int id)
         {
-            return "value";
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var comments = commentsRepository.GetCommentsByPost(id);
+            if (comments == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(comments);
         }
+
+        [HttpGet("Create/{id}")]
+        
+        public IActionResult Create( int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var model = new Comments
+            {
+                PostId = id
+            };
+            
+            return Ok(model);
+        }
+
+        // GET api/<CommentAPIController>/5
+        //[HttpGet("{id}")]
+        //public string Get(int id)
+        //{
+        //    return "value";
+        //}
 
         // POST api/<CommentAPIController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromForm] Comments comment)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var p = new Comments();
+            p.PostId = comment.PostId;
+            p.CommentId = comment.CommentId;
+            p.Content = comment.Content;
+
+            commentsRepository.SaveComment(p);
+
+            return CreatedAtAction("Post","CommmentApi",new {id = comment.PostId, comment});
         }
 
         // PUT api/<CommentAPIController>/5

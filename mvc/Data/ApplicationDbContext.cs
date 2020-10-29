@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -27,6 +28,9 @@ namespace mvc.Data
         public DbSet<Comments> Comments { get; set; }
 
         public DbSet<User> Users { get; set; }
+
+        public DbSet<SubscribedBlogs> SubscribedBlogses { get; set; }
+
 
         public DbSet<mvc.Models.ViewModels.PostViewModel> PostViewModel { get; set; }
 

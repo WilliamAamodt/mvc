@@ -154,5 +154,14 @@ namespace mvc.Controllers
             }
 
         }
+
+        [Authorize]
+        public async Task<ActionResult> SubscribeToBlog(int id)
+        {
+
+           await blogRepository.subscribe(id, User);
+
+            return RedirectToAction("Index");
+        }
     }
 }

@@ -20,7 +20,7 @@ namespace mvc.Models.BlogRepo
         }
         public IEnumerable<Comments> GetCommentsByPost(int id)
         {
-            IQueryable<Comments> p = (from o in db.Comments
+            IEnumerable<Comments> p = (from o in db.Comments
                 where o.PostId == id
                 select new Comments()
                 {

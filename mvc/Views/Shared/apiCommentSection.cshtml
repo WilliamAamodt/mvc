@@ -1,0 +1,144 @@
+﻿@model int;
+
+<h1>apiCommentSection</h1>
+<script type="text/javascript">
+
+    setInterval("update()", 10000);
+
+    var postId = @Model;
+
+    function update ( )
+    {
+        listComments(function (comments) {
+            var strComments="";
+            $.each(comments, function (index, comment) {
+                strComments += "<tr><td>" + comment.content;
+            });
+            $("#comments").html(strComments);
+
+        });
+
+
+        function listComments(callback) {
+            $.ajax({
+                url: "/api/CommentAPI/" + @Model,
+                data: {},
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+            }).then(function(comments){
+                callback(comments);
+            });
+        }
+    }
+    //function add() {
+
+    //    var product = { "Name": "Spikerpistol2", "Description": "God spikerpistol", "Price": 2550.00, "CategoryId": 1, "ManufacturerId": 1, "OwnerId":""};
+    //    $.ajax(
+    //        {
+    //            type: "POST",
+    //            url: "/api/Product/",
+    //            data: JSON.stringify(product),
+    //            contentType: "application/json;charset=utf-8",
+    //            dataType: 'json',
+    //            success: function (result) {
+    //                $("#update").html("<p>POST ferdig ok ..." + "</p>");
+    //            },
+    //            error: function (req, status, error) {
+    //                $("#update").html("AJAX error");
+    //            }
+    //        });
+    //}
+    function get(postid) {
+        
+        //contact = { "name": "petter smart", "address": "narvik", "mobile": "999999", "email": "test1@gmail.com" };
+        $.ajax(
+            {
+                type: "get",
+                url: "/api/commentapi/" + postid,
+                data: {},
+                contenttype: "application/json;charset=utf-8",
+                datatype: 'json',
+                success: function (result) {
+                    console.log(result);
+                    $("#update").html("<p>content:" + result[0].content + "</p>");
+                },
+                error: function (req, status, error) {
+                    $("#update").html("ajax error");
+                }
+            });
+    }
+
+    $(document).ready(function () {
+
+        $("#comments").html("<p>Venter på data fra server" + "</p>");
+        $("#update").html("<p>Venter på POST..." + "</p>");
+
+        update();
+        // add();
+        get(@Model);
+    });
+
+
+</script>
+<script>
+    //https://www.youtube.com/watch?v=HuniMNaWP6U&ab_channel=Technotips-Ashish
+    var CreateComment = function (postId) {
+
+        $.ajax({
+            type: "GET",
+            url: "/Comment/CreateComment",
+            data: { PostId: postId },
+            success: function (response) {
+
+                $("#myModalBody").html(response);
+
+                $("#myModal").modal("show");
+
+            }
+
+        });
+    }
+</script>
+<script>
+
+    $(document).ready(function () {
+
+        $("#btnSubmit").click(function (e) {
+            //var comment = { "content" : "hello" , "postId" : "27" }
+            var formData = $("#commentForm").serializeArray();
+
+            $.ajax({
+                type: "POST",
+                url: "/api/CommentAPI",
+                data: formData,
+                contenttype: "application/json;charset=utf-8",
+                datatype: 'json',
+                success: function () {
+
+
+                    $("#myModal").modal("hide");
+
+                }
+
+            });
+
+        });
+    });
+
+</script>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            Content
+        </th>
+
+        <th></th>
+    </tr>
+    </thead>
+    <tbody id="comments">
+    </tbody>
+</table>
+<a href="#" class="btn btn-danger" onclick="CreateComment(@Model)">Add Comment!</a>
+<div id="update"></div>

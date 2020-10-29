@@ -23,5 +23,7 @@ namespace mvc.Models
         Blog Get(int id);
 
         public void Edit(Blog blog);
+
+        Task subscribe(int blogId, IPrincipal principal);
     }
 }

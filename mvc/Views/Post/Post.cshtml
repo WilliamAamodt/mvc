@@ -38,3 +38,7 @@
     <a asp-action="Edit" asp-route-id="@Model.PostId">Edit</a> |
     <a asp-action="Posts" asp-route-id="@Model.BlogId">Back to List</a>
 </div>
+
+<div id="alternativCommentSection">
+    @await Html.PartialAsync("apiCommentSection",Model.PostId)
+</div>

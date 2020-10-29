@@ -114,5 +114,22 @@ namespace mvc.Models.BlogRepo
                 return false;
             }
         }
+
+        [Authorize]
+        public async Task subscribe(int blogId, IPrincipal principal)
+        {
+            var currentUser = await manager.FindByNameAsync(principal.Identity.Name);
+            var currentUserName = currentUser.Id;
+
+            var p = new SubscribedBlogs
+            {
+                blogId = blogId,
+                userId = currentUserName,
+            };
+
+            await db.SubscribedBlogses.AddAsync(p);
+            await db.SaveChangesAsync();
+
+        }
     }
 }
