@@ -53,6 +53,24 @@ namespace mvc.Models.BlogRepo
             return blogs;
         }
 
+        public async Task< IEnumerable<Blog>> GetSubBlogs(IPrincipal principal)
+        {
+            var currentUser = await manager.FindByNameAsync(principal.Identity.Name);
+
+            IEnumerable<SubscribedBlogs> subs = await db.SubscribedBlogses
+                .Where(o => o.userId == currentUser.Id)
+                .ToListAsync();
+            List<Blog> blogList = new List<Blog>();
+            foreach (var blogse in subs)
+            {
+                Blog blog = await (from o in db.Blog
+                    where o.BlogId == blogse.blogId
+                    select o).FirstOrDefaultAsync();
+                 blogList.Add(blog);
+            }
+
+            return blogList;
+        }
         public BlogViewModel GetBlog(int id)
         {
             var b = (from o in db.Blog

@@ -24,6 +24,8 @@ namespace mvc.Models
 
         public void Edit(Blog blog);
 
+        Task<IEnumerable<Blog>> GetSubBlogs(IPrincipal principal);
+
         Task subscribe(int blogId, IPrincipal principal);
     }
 }

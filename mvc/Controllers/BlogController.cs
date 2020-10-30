@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.Loader;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -48,6 +49,13 @@ namespace mvc.Controllers
         public IActionResult Index()
         {
             return View(blogRepository.GetAll());
+        }
+
+        [Authorize]
+        public async Task< ActionResult> UserPage()
+        {
+           var model = await blogRepository.GetSubBlogs(User);
+            return View(model);
         }
 
         [HttpGet]
