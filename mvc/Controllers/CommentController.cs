@@ -33,18 +33,6 @@ namespace mvc.Controllers
             return View(commentsRepository.GetCommentsByPost(id));
 
         }
-        // GET: CommentController
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: CommentController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
         [HttpGet]
         public ActionResult CreateComment(int postId)
         {

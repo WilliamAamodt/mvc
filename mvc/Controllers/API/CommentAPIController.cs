@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,9 @@ using mvc.Models.Entites;
 
 namespace mvc.Controllers.API
 {
+    //ble trøbbel med JWT ikke lenge før innlevering, må desverre kommentere ut.
+
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class CommentAPIController : ControllerBase
@@ -40,6 +44,7 @@ namespace mvc.Controllers.API
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public IActionResult Get([FromRoute] int id)
         {
             if (!ModelState.IsValid)
@@ -57,7 +62,7 @@ namespace mvc.Controllers.API
         }
 
         [HttpGet("Create/{id}")]
-        
+        [Authorize]
         public IActionResult Create( int id)
         {
             if (!ModelState.IsValid)
@@ -82,6 +87,7 @@ namespace mvc.Controllers.API
 
         // POST api/<CommentAPIController>
         [HttpPost]
+        [Authorize]
         public IActionResult Post([FromForm] Comments comment)
         {
             if (!ModelState.IsValid)

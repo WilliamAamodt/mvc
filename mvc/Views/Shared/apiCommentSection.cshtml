@@ -1,6 +1,103 @@
 ﻿@model int;
 
-<h1>apiCommentSection</h1>
+<div type="hidden" id="debugCheck">
+    <p>Eksempelet benytter jwt basert autorisasjon</p>
+    <div style="margin: 50px auto; width:600px;">
+        <div id="btLoginContainer">
+            <input type="text" name="username" id="username" placeholder="Username" />
+            <input type="password" name="password" id="password" placeholder="Password" />
+            <button id="btLogin">Login</button><br>
+            <label>Must have a valid username and password</label>
+        </div>
+        <div id="btLogoutContainer">
+            <button id="btLogout">Logout</button>
+        </div>
+        <div>
+            <label>Action that requires the user to be authenticated: </label>
+            <div type ="hidden" id="createcommentdisplay">
+                <a href="#" class="btn btn-danger" onclick="CreateComment(@Model)">Add Comment!</a>
+            </div>
+        </div>
+    </div>
+    <div style="margin: 50px; background: lightgray" id="responseContainer">
+
+    </div>
+</div>
+
+<script>
+    function handleError(xhr, textStatus, errorThrown) {
+        if (xhr.status == 401)
+            $('#responseContainer').html("Unauthorized request");
+        else {
+            var message = "<p>Status code: " + xhr.status + "</p>";
+            message += "<pre>" + xhr.responseText + "</pre>";
+            $('#responseContainer').html(message);
+        }
+    }
+
+    function isUserLoggedIn() {
+        return localStorage.getItem("token") !== null;
+    }
+
+    function getSavedToken() {
+        return localStorage.getItem("token");
+    }
+
+
+    $(function () {
+        $('#btLogin2').click(function () {
+            $.ajax({
+                    url: "/api/myaccounts/verifyLogin",
+                    type: "POST",
+                    data: JSON.stringify({ username: $('#username').val(), password: $('#password').val() }),
+                    dataType: "json",
+                contentType: "application/json; charset=utf-8"
+
+                })
+                .done(function (token) {
+                    localStorage.setItem("token", JSON.stringify(token));
+                    $('#btLoginContainer').hide();
+                    $('#btLogoutContainer').show();
+                    var message = "<p>Token received and saved in local storage under the key 'token'</p>";
+                    message += "<p>Token Value: </p><p style='word-wrap:break-word'>" + JSON.stringify(token) + "</p>";
+                    $('#responseContainer').html(message);
+                })
+                .fail(handleError());
+        });
+
+        $('#btLogin').click(function () {
+            $.post("/api/myaccounts/verifyLogin", $.param({ username: $('#username').val(), password: $('#password').val() }))
+                .done(function (token) {
+                    localStorage.setItem("token", token);
+                    $('#btLoginContainer').hide();
+                    $('#btLogoutContainer').show();
+                    var message = "<p>Token received and saved in local storage under the key 'token'</p>";
+                    message += "<p>Token Value: </p><p style='word-wrap:break-word'>" + token + "</p>";
+                    $('#responseContainer').html(message);
+                }).fail(handleError);
+        });
+
+        $('#btLogout').click(function () {
+            localStorage.removeItem("token");
+            $('#btLogoutContainer').hide();
+            $('#btLoginContainer').show();
+            $('#responseContainer').html("<p>Token deleted from local storage</p>");
+        });
+
+        if (isUserLoggedIn()) {
+            $('#btLoginContainer').hide();
+            $('#btLogoutContainer').show();
+            $('#createcommentdisplay').show();
+            //$('#debugCheck').hide();
+        } else {
+            $('#btLoginContainer').show();
+            $('#btLogoutContainer').hide();
+            $('#createcommentdisplay').hide();
+            $('#debugCheck').show();
+        }
+    });
+
+</script>
 <script type="text/javascript">
 
     setInterval("update()", 10000);
@@ -21,109 +118,113 @@
 
         function listComments(callback) {
             $.ajax({
-                url: "/api/CommentAPI/" + @Model,
+                beforeSend: function (xhr) {
+                    if (isUserLoggedIn()) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + getSavedToken());
+                    }
+                },
+                url: "/api/CommentApi/" + @Model,
                 data: {},
                 type: "GET",
                 contentType: "application/json;charset=utf-8",
             }).then(function(comments){
                 callback(comments);
-            });
+            }).done(function (userDetails) {
+                
+            }).fail(handleError);
         }
     }
-    //function add() {
+    //function get(postid) {
 
-    //    var product = { "Name": "Spikerpistol2", "Description": "God spikerpistol", "Price": 2550.00, "CategoryId": 1, "ManufacturerId": 1, "OwnerId":""};
     //    $.ajax(
     //        {
-    //            type: "POST",
-    //            url: "/api/Product/",
-    //            data: JSON.stringify(product),
-    //            contentType: "application/json;charset=utf-8",
-    //            dataType: 'json',
+    //            beforeSend: function (xhr) {
+    //                if (isUserLoggedIn()) {
+    //                    xhr.setRequestHeader('Authorization', 'Bearer ' + getSavedToken());
+    //                }
+    //            },
+    //            type: "get",
+    //            url: "/api/commentapi/" + postid,
+    //            data: {},
+    //            contenttype: "application/json;charset=utf-8",
+    //            datatype: 'json',
     //            success: function (result) {
-    //                $("#update").html("<p>POST ferdig ok ..." + "</p>");
+    //                console.log(result);
     //            },
     //            error: function (req, status, error) {
-    //                $("#update").html("AJAX error");
+
     //            }
-    //        });
+    //        })
+    //        .done(function (userDetails) {
+    //        }).fail(handleError);
     //}
-    function get(postid) {
-        
-        //contact = { "name": "petter smart", "address": "narvik", "mobile": "999999", "email": "test1@gmail.com" };
-        $.ajax(
-            {
-                type: "get",
-                url: "/api/commentapi/" + postid,
-                data: {},
-                contenttype: "application/json;charset=utf-8",
-                datatype: 'json',
-                success: function (result) {
-                    console.log(result);
-                    $("#update").html("<p>content:" + result[0].content + "</p>");
-                },
-                error: function (req, status, error) {
-                    $("#update").html("ajax error");
-                }
-            });
-    }
 
     $(document).ready(function () {
-
-        $("#comments").html("<p>Venter på data fra server" + "</p>");
-        $("#update").html("<p>Venter på POST..." + "</p>");
-
         update();
-        // add();
         get(@Model);
     });
 
 
 </script>
 <script>
-    //https://www.youtube.com/watch?v=HuniMNaWP6U&ab_channel=Technotips-Ashish
-    var CreateComment = function (postId) {
+        
+        var CreateComment = function (postId) {
 
-        $.ajax({
-            type: "GET",
-            url: "/Comment/CreateComment",
-            data: { PostId: postId },
-            success: function (response) {
+                $.ajax({
+                    type: "GET",
+                    url: "/Comment/CreateComment",
+                    data: { PostId: postId },
+                    success: function (response) {
 
-                $("#myModalBody").html(response);
+                        $("#myModalBody").html(response);
 
-                $("#myModal").modal("show");
+                        $("#myModal").modal("show");
 
-            }
+                    }
 
-        });
-    }
+                });
+        }
 </script>
 <script>
 
-    $(document).ready(function () {
+        $(document).ready(function () {
 
-        $("#btnSubmit").click(function (e) {
-            //var comment = { "content" : "hello" , "postId" : "27" }
-            var formData = $("#commentForm").serializeArray();
+                $("#btnSubmit").click(function (e) {
+                    var formData = $("#commentForm").serializeArray();
 
-            $.ajax({
-                type: "POST",
-                url: "/api/CommentAPI",
-                data: formData,
-                contenttype: "application/json;charset=utf-8",
-                datatype: 'json',
-                success: function () {
+                    $.ajax({
+                        beforeSend: function (xhr) {
+                            if (isUserLoggedIn()) {
+                                xhr.setRequestHeader('Authorization', 'Bearer ' + getSavedToken());
+                            }
+                        },
+                        type: "POST",
+                        url: "/api/CommentAPI",
+                        data: formData,
+                        contenttype: "application/json;charset=utf-8",
+                        datatype: 'json',
+                        success: function (response) {
 
+                            $("#myModal").modal("hide");
+                        }
+                        })
+                        .done(function (userDetails) {
 
-                    $("#myModal").modal("hide");
+                        }).fail(handleError);
 
+                });
+
+                if (isUserLoggedIn()) {
+                    $('#btLoginContainer').hide();
+                    $('#btLogoutContainer').show();
+                    $('#createcommentdisplay').show();
+                } else {
+                    $('#btLoginContainer').show();
+                    $('#btLogoutContainer').hide();
+                    $('#createcommentdisplay').hide();
+                    $('#debugCheck').show();
                 }
-
-            });
-
         });
-    });
 
 </script>
 
@@ -140,5 +241,4 @@
     <tbody id="comments">
     </tbody>
 </table>
-<a href="#" class="btn btn-danger" onclick="CreateComment(@Model)">Add Comment!</a>
 <div id="update"></div>

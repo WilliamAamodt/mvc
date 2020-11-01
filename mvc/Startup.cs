@@ -66,7 +66,7 @@ namespace mvc
                     x.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("the secret key that needs to be atleast 16 characters long")),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("SecretKeyNeedsToBeVeryBigForThisToWork")),
                         ValidateIssuer = false,
                         ValidateAudience = false,
 

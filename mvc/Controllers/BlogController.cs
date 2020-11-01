@@ -31,15 +31,12 @@ namespace mvc.Controllers
         private IBlogRepository blogRepository;
         private IPostRepository postRepository;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly ApplicationDbContext _db;
         private readonly IAuthorizationService _authorizationService;
 
-        public BlogController(IBlogRepository blogRepository, IPostRepository postRepository,
-            ApplicationDbContext db = null, UserManager<IdentityUser> userManager = null, IAuthorizationService authorizationService = null)
+        public BlogController(IBlogRepository blogRepository, IPostRepository postRepository, UserManager<IdentityUser> userManager = null, IAuthorizationService authorizationService = null)
         {
             this.blogRepository = blogRepository;
             this.postRepository = postRepository;
-            _db = db;
             _userManager = userManager;
             _authorizationService = authorizationService;
 

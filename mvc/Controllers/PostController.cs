@@ -65,26 +65,6 @@ namespace mvc.Controllers
             return View(p);
 
         }
-
-        //[Route("Post/Post/{PostId}")]
-        [HttpGet]
-        public ActionResult Post(int id)
-        {
-            
-            PostViewModel p = postRepository.getPostViewModel(id);
-
-            return View(p);
-
-        }
-
-        //// GET: PostController/Details/5
-        //public ActionResult Details(int id)
-        //{
-        //    return View();
-        //}
-
-        //// GET: PostController/Create
-
         [HttpGet]
         public async Task<ActionResult> Create(int id)
         {
@@ -121,44 +101,6 @@ namespace mvc.Controllers
 
             return View(post);
         }
-
-        [HttpGet]
-        public ActionResult CreateComment(int postId)
-        {
-            var post = postRepository.Get(postId);
-
-            var model = new Comments
-            {
-                PostId = post.PostId
-            };
-            return View(model);
-        }
-
-        [HttpPost]
-        public ActionResult CreateComment([Bind("Content,PostId")] Comments comment)
-        {
-            if (ModelState.IsValid)
-            {
-                var p = new Comments();
-                p.PostId = comment.PostId;
-                p.CommentId = comment.CommentId;
-                p.Content = comment.Content;
-                postRepository.SaveComment(p);
-                return RedirectToAction("Post", "Post", new {id = p.PostId});
-            }
-
-            return View(comment);
-        }
-
-        [HttpGet]
-        public ActionResult DeleteComment([Bind("CommentId,Content,PostId")] int idComment, int id)
-        {
-            postRepository.DeleteComment(idComment,id);
-
-
-            return RedirectToAction("Post", "Post", new{id});
-        }
-        
         [HttpGet]
         public ActionResult DeletePost([Bind("Name, Content, BlogId")] int postId, int blogId)
         {
@@ -200,46 +142,5 @@ namespace mvc.Controllers
             }
         }
 
-        //// GET: PostController/Edit/5
-        //public ActionResult Edit(int id)
-        //{
-        //    return View();
-        //}
-
-        //// POST: PostController/Edit/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit(int id, IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
-
-        //// GET: PostController/Delete/5
-        //public ActionResult Delete(int id)
-        //{
-        //    return View();
-        //}
-
-        //// POST: PostController/Delete/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Delete(int id, IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
     }
 }
