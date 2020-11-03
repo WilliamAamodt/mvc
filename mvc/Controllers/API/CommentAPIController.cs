@@ -17,7 +17,7 @@ namespace mvc.Controllers.API
 {
     //ble trøbbel med JWT ikke lenge før innlevering, må desverre kommentere ut.
 
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class CommentAPIController : ControllerBase

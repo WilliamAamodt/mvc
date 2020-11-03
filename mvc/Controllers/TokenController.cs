@@ -39,7 +39,7 @@ namespace mvc.Controllers
 
             var token = new JwtSecurityToken(
                 new JwtHeader(new SigningCredentials(
-                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes("the secret key that needs to be atleast 16 characters long")),
+                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes("SecretKeyNeedsToBeVeryBigForThisToWork")),
                     SecurityAlgorithms.HmacSha256)),
                 new JwtPayload(claims));
 

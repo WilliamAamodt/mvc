@@ -1,11 +1,14 @@
 ﻿@model int;
+<script  src="https://code.jquery.com/jquery-3.2.1.min.js"
+         integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+         crossorigin="anonymous"></script>
 
-<div type="hidden" id="debugCheck">
+<div  id="debugCheck">
     <p>Eksempelet benytter jwt basert autorisasjon</p>
     <div style="margin: 50px auto; width:600px;">
         <div id="btLoginContainer">
-            <input type="text" name="username" id="username" placeholder="Username" />
-            <input type="password" name="password" id="password" placeholder="Password" />
+            <input type="text" name="UserName" id="username" placeholder="Username" />
+            <input type="password" name="Password" id="password" placeholder="Password" />
             <button id="btLogin">Login</button><br>
             <label>Must have a valid username and password</label>
         </div>
@@ -49,7 +52,7 @@
             $.ajax({
                     url: "/api/myaccounts/verifyLogin",
                     type: "POST",
-                    data: JSON.stringify({ username: $('#username').val(), password: $('#password').val() }),
+                    data: JSON.stringify({ UserName: $('#username').val(), Password: $('#password').val() }),
                     dataType: "json",
                 contentType: "application/json; charset=utf-8"
 
@@ -66,7 +69,7 @@
         });
 
         $('#btLogin').click(function () {
-            $.post("/api/myaccounts/verifyLogin", $.param({ username: $('#username').val(), password: $('#password').val() }))
+            $.post("/api/myaccounts/verifyLogin", $.param({ UserName: $('#username').val(), Password: $('#password').val() }))
                 .done(function (token) {
                     localStorage.setItem("token", token);
                     $('#btLoginContainer').hide();
@@ -112,6 +115,17 @@
                 strComments += "<tr><td>" + comment.content;
             });
             $("#comments").html(strComments);
+            if (isUserLoggedIn()) {
+                $('#btLoginContainer').hide();
+                $('#btLogoutContainer').show();
+                $('#createcommentdisplay').show();
+                //$('#debugCheck').hide();
+            } else {
+                $('#btLoginContainer').show();
+                $('#btLogoutContainer').hide();
+                $('#createcommentdisplay').hide();
+                $('#debugCheck').show();
+            }
 
         });
 
@@ -134,30 +148,30 @@
             }).fail(handleError);
         }
     }
-    //function get(postid) {
+    function get(postid) {
 
-    //    $.ajax(
-    //        {
-    //            beforeSend: function (xhr) {
-    //                if (isUserLoggedIn()) {
-    //                    xhr.setRequestHeader('Authorization', 'Bearer ' + getSavedToken());
-    //                }
-    //            },
-    //            type: "get",
-    //            url: "/api/commentapi/" + postid,
-    //            data: {},
-    //            contenttype: "application/json;charset=utf-8",
-    //            datatype: 'json',
-    //            success: function (result) {
-    //                console.log(result);
-    //            },
-    //            error: function (req, status, error) {
+        $.ajax(
+            {
+                beforesend: function (xhr) {
+                    if (isuserloggedin()) {
+                        xhr.setrequestheader('authorization', 'bearer ' + getsavedtoken());
+                    }
+                },
+                type: "get",
+                url: "/api/commentapi/" + postid,
+                data: {},
+                contenttype: "application/json;charset=utf-8",
+                datatype: 'json',
+                success: function (result) {
+                    console.log(result);
+                },
+                error: function (req, status, error) {
 
-    //            }
-    //        })
-    //        .done(function (userDetails) {
-    //        }).fail(handleError);
-    //}
+                }
+            })
+            .done(function (userdetails) {
+            }).fail(handleerror);
+    }
 
     $(document).ready(function () {
         update();

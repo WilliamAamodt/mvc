@@ -64,21 +64,22 @@ namespace mvc.Models.BlogRepo
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var confKey = _conf.GetSection("TokenSettings")["SecretKey"];
-            var key = Encoding.UTF8.GetBytes("the secret that needs to be at least 16 characeters long for HmacSha256");
+            var key = Encoding.ASCII.GetBytes(confKey); 
+            _userManager.FindByNameAsync(user.UserName);
             //var cIdentity = new ClaimsIdentity(new Claim[]
-            //    {
-            //        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            //        new Claim(ClaimTypes.NameIdentifier, user.Id),
-            //        new Claim(ClaimTypes.Name, user.Username),
-            //        new Claim(ClaimTypes.Role, user.Role)
-            //        //new Claim("roles", user.Role)
-            //    });
+            //{
+            //    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            //    new Claim(ClaimTypes.NameIdentifier, user.Id),
+            //    new Claim(ClaimTypes.Name, user.UserName),
+            //    new Claim(ClaimTypes.Role, user.Role)
+            //    //new Claim("roles", user.Role)
+            //});
             var cIdentity = new ClaimsIdentity(new Claim[]
             {
 
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Name, user.UserName), 
-                
+                new Claim(ClaimTypes.Name, user.UserName),
+
             });
 
             //claims.AddRange(roles.Select(role => new Claim(ClaimsIdentity.DefaultRoleClaimType, role)));
@@ -86,7 +87,7 @@ namespace mvc.Models.BlogRepo
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = cIdentity,
-                Expires = DateTime.UtcNow.AddHours(1),
+                Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);

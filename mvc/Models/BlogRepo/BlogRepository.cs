@@ -30,7 +30,9 @@ namespace mvc.Models.BlogRepo
         public void DeleteBlog(int id)
         {
             Blog blog = db.Blog.Find(id);
+            SubscribedBlogs blogs = db.SubscribedBlogses.Find(id);
             db.Remove(blog);
+                        db.Remove(blogs);
             db.SaveChanges();
         }
 
